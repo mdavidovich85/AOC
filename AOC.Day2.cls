@@ -33,17 +33,19 @@ ClassMethod BuildArray(OpCode As %String) As %Library.DynamicArray
   return array
 }
 
-ClassMethod ResetAlarm(Input As %Library.DynamicArray) As %Library.DynamicArray
+ClassMethod ResetAlarm(Input As %Library.DynamicArray, Noun As %Integer, Verb As %Integer) As %Library.DynamicArray
 {
 	S old = Input
-	D old.%Set(1,12)
-	D old.%Set(2,2)
+	D old.%Set(1,Noun)
+	D old.%Set(2,Verb)
 	//W old.%ToJSON()
 	S new = old
 	return new
 }
 
-ClassMethod ProcessInput() As %Status
+// w ##class(AOC.Day2).ProcessInput()
+
+ClassMethod ProcessInput(Noun As %Integer, Verb As %Integer) As %Library.DynamicArray
 {
 	
 	S input="C:\Users\d9728\Documents\inputDay2.txt"
@@ -59,7 +61,7 @@ ClassMethod ProcessInput() As %Status
 			}
 	
 	S array = ..BuildArray(build)
-	S array = ..ResetAlarm(array)
+	S array = ..ResetAlarm(array, Noun, Verb)
 	S OpCode = array.%Get(0)
 	S OpCodePos=0
 	
@@ -95,7 +97,23 @@ ClassMethod ProcessInput() As %Status
 			S OpCode = array.%Get(OpCodePos)
 		}
 	}
-	W array.%Get(0)
+	Return array.%Get(0)
+}
+
+ClassMethod NounVerb() As %Status
+{
+	
+		For Noun=0:1:99 {
+			For Verb=0:1:99 {
+				S array = ..ProcessInput(Noun,Verb)
+				I array=19690720 {
+				W "Noun is: "_Noun,!,"Verb is: "_Verb,!
+				S ANSWER = 100 * Noun + Verb
+				W ANSWER,!
+				Q
+				}
+			}
+		}
 }
 
 }
